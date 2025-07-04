@@ -1,7 +1,7 @@
 import pandas as pd
 
 def merge_all() -> str:
-    historical_file = "data/processed/historical_weather.csv"
+    historical_file = "/home/fanantenana/airflow/dags/weather_difference_pipeline/data/processed/historical_weather.csv"
     realtime_file = "data/processed/recent_global_weather.csv"
     output_file = "data/processed/meteo_global_all_in_one.csv"
 
