@@ -6,7 +6,7 @@ from datetime import datetime
 
 def extract_realtime_meteo(api_key: str, city: str, date: str) -> bool:
     """
-    Extrait les données météo OpenWeather en temps réel.
+    Extraction des données météo via API OpenWeather en temps réel.
     """
     try:
         url = "https://api.openweathermap.org/data/2.5/weather"
@@ -24,7 +24,7 @@ def extract_realtime_meteo(api_key: str, city: str, date: str) -> bool:
         realtime_weather_data = {
             'ville': city,
             'date_extraction': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'temperature': data['main']['temp'],
+            'temperature': round(data['main']['temp'], 2),
             'humidite': data['main']['humidity'],
             'pression': data['main']['pressure'],
             'description': data['weather'][0]['description'],
