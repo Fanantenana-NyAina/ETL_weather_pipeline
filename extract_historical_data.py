@@ -1,9 +1,11 @@
 import os
 import pandas as pd
 
+CITIES = ['Vancouver', 'San Francisco', 'Toronto', 'Jerusalem', 'Los Angeles', 'Montreal', 'Nashville']
+
 def extract_historical_meteo() -> str:
     """
-    Récupération et fusion des 7 fichiers qui contiennent les données historiques
+    Récupération et fusion des 7 fichiers qui contiennent les données historiques des villes cibles
     """
     base_dir = "/home/fanantenana/airflow/dags/weather_difference_pipeline/data"
     output_file = "/home/fanantenana/airflow/dags/weather_difference_pipeline/data/processed/historical_weather.csv"
@@ -29,12 +31,13 @@ def extract_historical_meteo() -> str:
     merged_df = merged_df.merge(melt_and_merge(description_df, "description"), on=["datetime", "ville"], how="left")
 
     merged_df = merged_df.merge(city_attrs.rename(columns={"City": "ville"}), on="ville", how="left")
+    merged_df = merged_df[merged_df["ville"].isin(CITIES)]
 
     merged_df = merged_df.rename(columns={"datetime": "date_extraction"})
     merged_df["date_extraction"] = pd.to_datetime(merged_df["date_extraction"])
-    merged_df = merged_df[merged_df["date_extraction"].dt.hour == 0]
+    merged_df = merged_df[merged_df["date_extraction"].dt.hour == 12]
     
-    merged_df["temperature"] = merged_df["temperature"] - 273.15
+    merged_df["temperature"] = round(merged_df["temperature"] - 273.15, 2)
 
     merged_df = merged_df.dropna()
 
