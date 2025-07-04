@@ -31,8 +31,12 @@ def extract_historical_meteo() -> str:
     merged_df = merged_df.merge(city_attrs.rename(columns={"City": "ville"}), on="ville", how="left")
 
     merged_df = merged_df.rename(columns={"datetime": "date_extraction"})
+    merged_df["date_extraction"] = pd.to_datetime(merged_df["date_extraction"])
+    merged_df = merged_df[merged_df["date_extraction"].dt.hour == 0]
     
     merged_df["temperature"] = merged_df["temperature"] - 273.15
+
+    merged_df = merged_df.dropna()
 
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     merged_df.to_csv(output_file, index=False)
