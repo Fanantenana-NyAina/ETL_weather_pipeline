@@ -14,7 +14,6 @@ def extract_realtime_meteo(api_key: str, city: str, date: str) -> bool:
             'q': city,
             'appid': api_key,
             'units': 'metric',
-            'lang': 'fr'
         }
         
         res = requests.get(url, params=params, timeout=10)

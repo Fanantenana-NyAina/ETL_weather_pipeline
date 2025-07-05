@@ -28,4 +28,5 @@ def transform_to_star():
 
     fact_weather = data.merge(dim_ville, on="ville", how="left").drop(columns=["ville"])
     fact_weather.to_csv(f"{output_dir}/fact_weather.csv", index=False)
+    
     return f"{output_dir}/fact_weather.csv"

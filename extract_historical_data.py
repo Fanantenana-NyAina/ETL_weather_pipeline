@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 
+# all targeted cities
 CITIES = ['Vancouver', 'San Francisco', 'Toronto', 'Jerusalem', 'Los Angeles', 'Montreal', 'Nashville']
 
 def extract_historical_meteo() -> str:
@@ -10,8 +11,8 @@ def extract_historical_meteo() -> str:
     base_dir = "/home/fanantenana/airflow/dags/weather_difference_pipeline/data"
     output_file = "/home/fanantenana/airflow/dags/weather_difference_pipeline/data/processed/historical_weather.csv"
 
+    # Loading CSVs
     city_attrs = pd.read_csv(os.path.join(base_dir, "city_attributes.csv"))
-
     temp_df = pd.read_csv(os.path.join(base_dir, "temperature.csv"))
     humidity_df = pd.read_csv(os.path.join(base_dir, "humidity.csv"))
     pressure_df = pd.read_csv(os.path.join(base_dir, "pressure.csv"))
@@ -19,8 +20,8 @@ def extract_historical_meteo() -> str:
     wind_dir_df = pd.read_csv(os.path.join(base_dir, "wind_direction.csv"))
     description_df = pd.read_csv(os.path.join(base_dir, "weather_description.csv"))
 
+    # transformation part: merging the 7 files -> 1 meaningful file
     merged_df = temp_df.melt(id_vars=["datetime"], var_name="ville", value_name="temperature")
-
     def melt_and_merge(df, varname):
         return df.melt(id_vars=["datetime"], var_name="ville", value_name=varname)
 
@@ -41,6 +42,7 @@ def extract_historical_meteo() -> str:
 
     merged_df = merged_df.dropna()
 
+    # save CSV in local dir
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     merged_df.to_csv(output_file, index=False)
 
